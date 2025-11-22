@@ -1,0 +1,126 @@
+.calendar-view {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.calendar-header {
+  margin-bottom: 2rem;
+}
+
+.calendar-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.calendar-container {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 2rem;
+}
+
+/* FullCalendar styles */
+.calendar-container :global(.fc) {
+  color: var(--text-primary);
+  font-family: inherit;
+}
+
+.calendar-container :global(.fc-theme-standard) {
+  border: none;
+}
+
+.calendar-container :global(.fc-header-toolbar) {
+  margin-bottom: 1.5rem;
+}
+
+.calendar-container :global(.fc-button) {
+  background-color: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  transition: all var(--transition-speed);
+}
+
+.calendar-container :global(.fc-button:hover) {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: white;
+}
+
+.calendar-container :global(.fc-button-active) {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: white;
+}
+
+.calendar-container :global(.fc-daygrid-day) {
+  background-color: var(--bg-primary);
+  border-color: var(--border-color);
+}
+
+.calendar-container :global(.fc-day-today) {
+  background-color: var(--bg-tertiary);
+}
+
+.calendar-container :global(.fc-daygrid-event) {
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+}
+
+.calendar-container :global(.fc-daygrid-event:hover) {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-md);
+}
+
+.calendar-container :global(.fc-col-header-cell) {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  padding: 0.75rem;
+  font-weight: 600;
+}
+
+.calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 1rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+}
+
