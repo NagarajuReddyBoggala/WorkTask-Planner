@@ -5,7 +5,6 @@ export default ({ mode }) => {
   // Load env file based on current mode (development, production)
   const env = loadEnv(mode, process.cwd())
 
-  // Access environment variable with VITE_ prefix
   const backendUrl = 'https://worktask-planner.onrender.com'
 
   return defineConfig({
