@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://worktask-planner.onrender.com/api/$1"
+    }
+  ]
+}
