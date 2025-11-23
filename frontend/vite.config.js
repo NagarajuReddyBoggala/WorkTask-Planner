@@ -7,6 +7,9 @@ export default ({ mode }) => {
 
   const backendUrl = 'https://worktask-planner.onrender.com'
 
+    // Log the backend URL for verification
+  console.log("Vite dev server proxying /api requests to:", backendUrl);
+
   return defineConfig({
     plugins: [react()],
     server: {
