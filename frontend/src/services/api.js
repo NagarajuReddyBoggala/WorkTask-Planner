@@ -1,6 +1,9 @@
 import axios from 'axios'
 
-const API_BASE_URL = '/api'
+// Use environment variable for backend URL if available, otherwise fallback to relative path (for proxy)
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL
+  ? `${import.meta.env.VITE_BACKEND_URL}/api`
+  : '/api'
 
 const api = axios.create({
   baseURL: API_BASE_URL,

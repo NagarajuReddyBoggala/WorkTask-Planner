@@ -26,3 +26,6 @@ build/
 .DS_Store
 Thumbs.db
 
+
+# Vercel
+.vercel/
