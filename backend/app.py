@@ -1,12 +1,21 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime, date
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_bcrypt import Bcrypt
+from datetime import datetime, date, timedelta
 from dateutil import parser
 import os
 
 app = Flask(__name__)
 CORS(app)
+
+# JWTSettings
+app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'dev-secret-key-change-in-prod')
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=7)
+
+jwt = JWTManager(app)
+bcrypt = Bcrypt(app)
 
 # Database configuration
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -27,8 +36,16 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # Models
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    tasks = db.relationship('Task', backref='user', lazy=True)
+
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text)
     due_date = db.Column(db.Date)
@@ -65,18 +82,61 @@ class TaskDependency(db.Model):
 with app.app_context():
     db.create_all()
 
+# Auth Routes
+@app.route('/api/auth/register', methods=['POST'])
+def register():
+    data = request.json
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({"msg": "Email and password required"}), 400
+    
+    if User.query.filter_by(email=email).first():
+        return jsonify({"msg": "User already exists"}), 400
+    
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    new_user = User(email=email, password_hash=hashed_password)
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({"msg": "User created successfully"}), 201
+
+@app.route('/api/auth/login', methods=['POST'])
+def login():
+    data = request.json
+    email = data.get('email')
+    password = data.get('password')
+
+    user = User.query.filter_by(email=email).first()
+    if user and bcrypt.check_password_hash(user.password_hash, password):
+        access_token = create_access_token(identity=str(user.id))
+        return jsonify(access_token=access_token, user={"id": user.id, "email": user.email}), 200
+    
+    return jsonify({"msg": "Invalid credentials"}), 401
+
+@app.route('/api/auth/me', methods=['GET'])
+@jwt_required()
+def get_current_user():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    return jsonify({"id": user.id, "email": user.email}), 200
+
 # API Routes
 
 @app.route('/api/tasks', methods=['GET'])
+@jwt_required()
 def get_tasks():
     """Get all tasks with optional filters"""
+    current_user_id = get_jwt_identity()
     status = request.args.get('status')
     priority = request.args.get('priority')
     date_from = request.args.get('date_from')
     date_to = request.args.get('date_to')
     search = request.args.get('search')
     
-    query = Task.query
+    # Filter by current user
+    query = Task.query.filter_by(user_id=current_user_id)
     
     if status:
         query = query.filter(Task.status == status)
@@ -115,11 +175,14 @@ def get_tasks():
     } for t in tasks])
 
 @app.route('/api/tasks', methods=['POST'])
+@jwt_required()
 def create_task():
     """Create a new task"""
+    current_user_id = get_jwt_identity()
     data = request.json
     
     task = Task(
+        user_id=current_user_id,
         title=data.get('title'),
         description=data.get('description'),
         due_date=parser.parse(data['due_date']).date() if data.get('due_date') else None,
@@ -150,9 +213,11 @@ def create_task():
     }), 201
 
 @app.route('/api/tasks/<int:task_id>', methods=['GET'])
+@jwt_required()
 def get_task(task_id):
     """Get a single task with checklist and dependencies"""
-    task = Task.query.get_or_404(task_id)
+    current_user_id = get_jwt_identity()
+    task = Task.query.filter_by(id=task_id, user_id=current_user_id).first_or_404()
     
     return jsonify({
         'id': task.id,
@@ -183,9 +248,11 @@ def get_task(task_id):
     })
 
 @app.route('/api/tasks/<int:task_id>', methods=['PUT'])
+@jwt_required()
 def update_task(task_id):
     """Update a task"""
-    task = Task.query.get_or_404(task_id)
+    current_user_id = get_jwt_identity()
+    task = Task.query.filter_by(id=task_id, user_id=current_user_id).first_or_404()
     data = request.json
     
     task.title = data.get('title', task.title)
@@ -216,17 +283,23 @@ def update_task(task_id):
     })
 
 @app.route('/api/tasks/<int:task_id>', methods=['DELETE'])
+@jwt_required()
 def delete_task(task_id):
     """Delete a task"""
-    task = Task.query.get_or_404(task_id)
+    current_user_id = get_jwt_identity()
+    task = Task.query.filter_by(id=task_id, user_id=current_user_id).first_or_404()
     db.session.delete(task)
     db.session.commit()
     return '', 204
 
 @app.route('/api/tasks/<int:task_id>/checklist', methods=['POST'])
+@jwt_required()
 def add_checklist_item(task_id):
     """Add a checklist item to a task"""
-    task = Task.query.get_or_404(task_id)
+    current_user_id = get_jwt_identity()
+    # verify task ownership
+    task = Task.query.filter_by(id=task_id, user_id=current_user_id).first_or_404()
+    
     data = request.json
     
     # Get max order
@@ -254,9 +327,13 @@ def add_checklist_item(task_id):
     }), 201
 
 @app.route('/api/checklist/<int:item_id>', methods=['PUT'])
+@jwt_required()
 def update_checklist_item(item_id):
     """Update a checklist item"""
-    item = ChecklistItem.query.get_or_404(item_id)
+    current_user_id = get_jwt_identity()
+    # Verify ownership through the Task relationship
+    item = ChecklistItem.query.join(Task).filter(ChecklistItem.id == item_id, Task.user_id == current_user_id).first_or_404()
+    
     data = request.json
     
     item.title = data.get('title', item.title)
@@ -277,18 +354,30 @@ def update_checklist_item(item_id):
     })
 
 @app.route('/api/checklist/<int:item_id>', methods=['DELETE'])
+@jwt_required()
 def delete_checklist_item(item_id):
     """Delete a checklist item"""
-    item = ChecklistItem.query.get_or_404(item_id)
+    current_user_id = get_jwt_identity()
+    # Verify ownership through the Task relationship
+    item = ChecklistItem.query.join(Task).filter(ChecklistItem.id == item_id, Task.user_id == current_user_id).first_or_404()
+    
     db.session.delete(item)
     db.session.commit()
     return '', 204
 
 @app.route('/api/tasks/<int:task_id>/dependencies', methods=['POST'])
+@jwt_required()
 def add_dependency(task_id):
     """Add a dependency to a task"""
+    current_user_id = get_jwt_identity()
+    # Verify task ownership
+    task = Task.query.filter_by(id=task_id, user_id=current_user_id).first_or_404()
+    
     data = request.json
     depends_on_id = data.get('depends_on_id')
+    
+    # Verify dependent task ownership
+    depends_on_task = Task.query.filter_by(id=depends_on_id, user_id=current_user_id).first_or_404()
     
     if depends_on_id == task_id:
         return jsonify({'error': 'Task cannot depend on itself'}), 400
@@ -309,34 +398,44 @@ def add_dependency(task_id):
     }), 201
 
 @app.route('/api/dependencies/<int:dependency_id>', methods=['DELETE'])
+@jwt_required()
 def delete_dependency(dependency_id):
     """Delete a dependency"""
-    dependency = TaskDependency.query.get_or_404(dependency_id)
+    current_user_id = get_jwt_identity()
+    # Join with Task to verify ownership
+    dependency = TaskDependency.query.join(Task, TaskDependency.task_id == Task.id).filter(TaskDependency.id == dependency_id, Task.user_id == current_user_id).first_or_404()
+    
     db.session.delete(dependency)
     db.session.commit()
     return '', 204
 
 @app.route('/api/dashboard/stats', methods=['GET'])
+@jwt_required()
 def get_dashboard_stats():
     """Get dashboard statistics"""
-    total_tasks = Task.query.count()
-    todo_tasks = Task.query.filter_by(status='todo').count()
-    in_progress_tasks = Task.query.filter_by(status='in_progress').count()
-    done_tasks = Task.query.filter_by(status='done').count()
+    current_user_id = get_jwt_identity()
+    
+    total_tasks = Task.query.filter_by(user_id=current_user_id).count()
+    todo_tasks = Task.query.filter_by(user_id=current_user_id, status='todo').count()
+    in_progress_tasks = Task.query.filter_by(user_id=current_user_id, status='in_progress').count()
+    done_tasks = Task.query.filter_by(user_id=current_user_id, status='done').count()
     
     today = date.today()
     overdue_tasks = Task.query.filter(
+        Task.user_id == current_user_id,
         Task.due_date < today,
         Task.status != 'done'
     ).count()
     
     upcoming_tasks = Task.query.filter(
+        Task.user_id == current_user_id,
         Task.assigned_date >= today,
         Task.assigned_date <= date.fromordinal(today.toordinal() + 7)
     ).count()
     
-    total_checklist_items = ChecklistItem.query.count()
-    completed_checklist_items = ChecklistItem.query.filter_by(completed=True).count()
+    # Complex join for checklist items owned by user's tasks
+    total_checklist_items = ChecklistItem.query.join(Task).filter(Task.user_id == current_user_id).count()
+    completed_checklist_items = ChecklistItem.query.join(Task).filter(Task.user_id == current_user_id, ChecklistItem.completed == True).count()
     
     return jsonify({
         'total_tasks': total_tasks,
@@ -351,11 +450,14 @@ def get_dashboard_stats():
     })
 
 @app.route('/api/jira/import', methods=['POST'])
+@jwt_required()
 def import_jira_ticket():
     """Import a task from Jira (mock implementation)"""
+    current_user_id = get_jwt_identity()
     data = request.json
     
     task = Task(
+        user_id=current_user_id,
         title=data.get('title', f"Jira: {data.get('jira_id', 'Unknown')}"),
         description=data.get('description', ''),
         jira_id=data.get('jira_id'),

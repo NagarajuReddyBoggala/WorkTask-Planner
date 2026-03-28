@@ -1,17 +1,19 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useTheme } from '../contexts/ThemeContext'
-import { Moon, Sun, Home, Calendar, List, Plus, Search } from 'lucide-react'
+import { useAuth } from '../contexts/AuthContext'
+import { Moon, Sun, Home, Calendar, List, Plus, Search, LogOut, User as UserIcon } from 'lucide-react'
 import './Layout.css'
 
 const Layout = ({ children }) => {
   const { theme, toggleTheme } = useTheme()
+  const { user, logout } = useAuth()
   const location = useLocation()
   const [showSearch, setShowSearch] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
   const navItems = [
-    { path: '/', icon: Home, label: 'Dashboard' },
+    { path: '/dashboard', icon: Home, label: 'Dashboard' },
     { path: '/calendar', icon: Calendar, label: 'Calendar' },
     { path: '/tasks', icon: List, label: 'Tasks' }
   ]
@@ -54,6 +56,19 @@ const Layout = ({ children }) => {
             title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
           >
             {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+          </button>
+          <div className="nav-divider" style={{ width: '1px', height: '24px', background: 'var(--border-color)', margin: '0 8px' }}></div>
+          <div className="user-profile" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px', borderRadius: '20px', backgroundColor: 'var(--bg-tertiary)', color: 'var(--text-primary)', fontSize: '0.9rem', fontWeight: 500 }}>
+            <UserIcon size={16} />
+            <span>{user?.email || "User"}</span>
+          </div>
+          <button
+            className="icon-button"
+            onClick={logout}
+            title="Log out"
+            style={{ color: 'var(--danger)' }}
+          >
+            <LogOut size={20} />
           </button>
         </div>
       </nav>
