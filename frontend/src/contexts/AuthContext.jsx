@@ -10,12 +10,11 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        if (token) {
-            // Configure axios default header
-            api.defaults.headers.common['Authorization'] = `Bearer ${token}`
-            localStorage.setItem('token', token)
+        const currentToken = token || localStorage.getItem('token')
+        if (currentToken && currentToken !== 'undefined' && currentToken !== 'null') {
+            api.defaults.headers.common['Authorization'] = `Bearer ${currentToken}`
+            localStorage.setItem('token', currentToken)
 
-            // Fetch user details
             api.get('/auth/me')
                 .then(response => {
                     setUser(response.data)
@@ -30,12 +29,16 @@ export const AuthProvider = ({ children }) => {
             localStorage.removeItem('token')
             setLoading(false)
         }
-    }, [token])
+    }, [])
 
     const login = async (email, password) => {
         try {
             const response = await api.post('/auth/login', { email, password })
             const { access_token, user } = response.data
+            
+            localStorage.setItem('token', access_token)
+            api.defaults.headers.common['Authorization'] = `Bearer ${access_token}`
+            
             setToken(access_token)
             setUser(user)
             return true
@@ -56,9 +59,10 @@ export const AuthProvider = ({ children }) => {
     }
 
     const logout = () => {
+        delete api.defaults.headers.common['Authorization']
+        localStorage.removeItem('token')
         setToken(null)
         setUser(null)
-        localStorage.removeItem('token')
     }
 
     return (

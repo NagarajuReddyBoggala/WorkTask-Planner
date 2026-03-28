@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { Mail, Lock, CheckCircle2, ArrowLeft } from 'lucide-react'
 import './Auth.css'
 
 function RegisterPage() {
@@ -16,57 +17,77 @@ function RegisterPage() {
         setError('')
 
         if (password !== confirmPassword) {
-            return setError('Passwords do not match')
+            return setError('Passwords do not match. Please re-enter them.')
         }
 
         const success = await register(email, password)
         if (success) {
             navigate('/login')
         } else {
-            setError('Failed to register. Email might be already in use.')
+            setError('Registration failed. The email address might already be in use.')
         }
     }
 
     return (
         <div className="auth-container">
+            <Link to="/" className="back-home">
+                <ArrowLeft size={18} /> Home
+            </Link>
+
             <div className="auth-card">
                 <h2>Create Account</h2>
+                <p className="auth-subtitle">Secure your workspace to get started.</p>
+
                 {error && <div className="auth-error">{error}</div>}
+
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label>Email</label>
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
+                        <label>Email Address</label>
+                        <div className="input-icon-wrapper">
+                            <input
+                                type="email"
+                                placeholder="you@example.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                            <Mail size={18} className="input-icon" />
+                        </div>
                     </div>
+
                     <div className="form-group">
                         <label>Password</label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
+                        <div className="input-icon-wrapper">
+                            <input
+                                type="password"
+                                placeholder="••••••••"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                            <Lock size={18} className="input-icon" />
+                        </div>
                     </div>
+
                     <div className="form-group">
                         <label>Confirm Password</label>
-                        <input
-                            type="password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            required
-                        />
+                        <div className="input-icon-wrapper">
+                            <input
+                                type="password"
+                                placeholder="••••••••"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                required
+                            />
+                            <CheckCircle2 size={18} className="input-icon" />
+                        </div>
                     </div>
+
                     <button type="submit" className="auth-button">Sign Up</button>
                 </form>
+
                 <div className="auth-footer">
-                    Already have an account? <Link to="/login">Sign In</Link>
-                </div>
-                <div className="auth-footer">
-                    <Link to="/">Back to Home</Link>
+                    <span>Already have an account? <Link to="/login">Sign in</Link></span>
                 </div>
             </div>
         </div>

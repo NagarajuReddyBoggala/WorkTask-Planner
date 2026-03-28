@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { CheckCircle, Zap, Shield, Layout } from 'lucide-react'
 import './LandingPage.css'
 
 function LandingPage() {
@@ -9,59 +10,54 @@ function LandingPage() {
     return (
         <div className="landing-container">
             <header className="landing-header">
-                <div className="logo">WorkTask Planner</div>
-                <nav>
-                    {isAuthenticated ? (
-                        <Link to="/dashboard" className="nav-btn primary">Go to Dashboard</Link>
-                    ) : (
-                        <>
-                            <Link to="/login" className="nav-btn">Sign In</Link>
-                            <Link to="/register" className="nav-btn primary">Sign Up</Link>
-                        </>
+                <div className="logo">TaskFlow Planner</div>
+                <nav className="nav-links">
+                    {isAuthenticated && (
+                        <Link to="/dashboard" className="nav-btn primary">Dashboard</Link>
                     )}
                 </nav>
             </header>
 
             <main>
                 <section className="hero">
-                    <h1>Manage Your Tasks with Efficiency and Style</h1>
-                    <p>Organize your work, track progress, and collaborate seamlessly with our intuitive task planner.</p>
-                    {!isAuthenticated && (
-                        <div className="cta-group">
-                            <Link to="/register" className="cta-btn primary">Get Started for Free</Link>
-                            <Link to="/login" className="cta-btn secondary">Log In</Link>
-                        </div>
-                    )}
-                    {isAuthenticated && (
-                        <div className="cta-group">
-                            <Link to="/dashboard" className="cta-btn primary">Go to Dashboard</Link>
-                        </div>
-                    )}
+                    <div className="hero-pill">Next-Gen Productivity</div>
+                    <h1>Master Your Work with <span>Absolute Clarity</span></h1>
+                    <p>Organize your work, track your momentum, and achieve your goals with a beautifully simple, distraction-free workspace.</p>
+                    
+                    <div className="cta-group">
+                        {isAuthenticated ? (
+                            <Link to="/dashboard" className="cta-btn primary">Launch Dashboard</Link>
+                        ) : (
+                            <>
+                                <Link to="/register" className="cta-btn primary">Get Started</Link>
+                            </>
+                        )}
+                    </div>
                 </section>
 
                 <section className="features">
                     <div className="feature-card">
-                        <h3>Task Management</h3>
-                        <p>Create, update, and organize tasks with ease. Set priorities and due dates.</p>
+                        <div className="feature-icon"><Zap size={24} /></div>
+                        <h3>Frictionless Flow</h3>
+                        <p>Create, update, and organize tasks at the speed of thought. Zero loading screens, zero wait.</p>
                     </div>
                     <div className="feature-card">
-                        <h3>Checklists</h3>
-                        <p>Break down complex tasks into manageable sub-tasks with progress tracking.</p>
+                        <div className="feature-icon"><CheckCircle size={24} /></div>
+                        <h3>Deep Checklists</h3>
+                        <p>Break down complex, overwhelming tasks into manageable sub-tasks with visual progress tracking.</p>
                     </div>
                     <div className="feature-card">
-                        <h3>Dependencies</h3>
-                        <p>Link tasks together and visualize workflow dependencies effectively.</p>
+                        <div className="feature-icon"><Layout size={24} /></div>
+                        <h3>Visual Architecture</h3>
+                        <p>Your work mapped out intuitively. Understand priorities and dependencies at a single glance.</p>
                     </div>
                     <div className="feature-card">
-                        <h3>Private & Secure</h3>
-                        <p>Your tasks are private to your account. Secure authentication keeps your data safe.</p>
+                        <div className="feature-icon"><Shield size={24} /></div>
+                        <h3>Fort Knox Security</h3>
+                        <p>Your tasks are entirely private. Hardened security protocols ensure your intellectual property is safe.</p>
                     </div>
                 </section>
             </main>
-
-            <footer className="landing-footer">
-                <p>&copy; {new Date().getFullYear()} WorkTask Planner. All rights reserved.</p>
-            </footer>
         </div>
     )
 }
