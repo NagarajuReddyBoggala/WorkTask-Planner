@@ -31,20 +31,20 @@
 }
 
 /* FullCalendar styles */
-.calendar-container :global(.fc) {
+.calendar-container .fc {
   color: var(--text-primary);
   font-family: inherit;
 }
 
-.calendar-container :global(.fc-theme-standard) {
+.calendar-container .fc-theme-standard {
   border: none;
 }
 
-.calendar-container :global(.fc-header-toolbar) {
+.calendar-container .fc-header-toolbar {
   margin-bottom: 1.5rem;
 }
 
-.calendar-container :global(.fc-button) {
+.calendar-container .fc-button {
   background-color: var(--bg-tertiary);
   border-color: var(--border-color);
   color: var(--text-primary);
@@ -53,44 +53,51 @@
   transition: all var(--transition-speed);
 }
 
-.calendar-container :global(.fc-button:hover) {
+.calendar-container .fc-button:hover {
   background-color: var(--accent-primary);
   border-color: var(--accent-primary);
   color: white;
 }
 
-.calendar-container :global(.fc-button-active) {
+.calendar-container .fc-button-active {
   background-color: var(--accent-primary);
   border-color: var(--accent-primary);
   color: white;
 }
 
-.calendar-container :global(.fc-daygrid-day) {
+.calendar-container .fc-daygrid-day {
   background-color: var(--bg-primary);
   border-color: var(--border-color);
 }
 
-.calendar-container :global(.fc-day-today) {
+.calendar-container .fc-day-today {
   background-color: var(--bg-tertiary);
 }
 
-.calendar-container :global(.fc-daygrid-event) {
+.calendar-container .fc-daygrid-event {
   border-radius: 4px;
   padding: 0.25rem 0.5rem;
   cursor: pointer;
   transition: all var(--transition-speed);
 }
 
-.calendar-container :global(.fc-daygrid-event:hover) {
+.calendar-container .fc-daygrid-event:hover {
   transform: scale(1.05);
   box-shadow: var(--shadow-md);
 }
 
-.calendar-container :global(.fc-col-header-cell) {
+.calendar-container .fc-col-header-cell {
   background-color: var(--bg-tertiary);
-  color: var(--text-primary);
+  color: var(--text-primary) !important;
   padding: 0.75rem;
   font-weight: 600;
+}
+
+.calendar-container .fc-col-header-cell-cushion,
+.calendar-container .fc-daygrid-day-number,
+.calendar-container .fc-scrollgrid-sync-inner {
+  color: var(--text-primary) !important;
+  text-decoration: none !important;
 }
 
 .calendar-legend {

@@ -45,16 +45,20 @@ const CalendarView = () => {
   }
 
   const calendarEvents = tasks
-    .filter(task => task.assigned_date)
-    .map(task => ({
-      id: task.id.toString(),
-      title: task.title,
-      start: task.assigned_date,
-      end: task.due_date || task.assigned_date,
-      backgroundColor: getEventColor(task),
-      borderColor: getEventColor(task),
-      extendedProps: { task }
-    }))
+    .filter(task => task.due_date || task.assigned_date)
+    .map(task => {
+      // Determine the best date to show the task. Let's use due_date, fallback to assigned_date
+      const targetDate = task.due_date || task.assigned_date;
+      return {
+        id: task.id.toString(),
+        title: task.title,
+        start: targetDate, // Setting both start and end to the same date makes it a point-in-time task
+        allDay: true,
+        backgroundColor: getEventColor(task),
+        borderColor: getEventColor(task),
+        extendedProps: { task }
+      }
+    })
 
   const handleDateClick = (arg) => {
     const clickedDate = format(arg.date, 'yyyy-MM-dd')
