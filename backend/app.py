@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_bcrypt import Bcrypt
 from datetime import datetime, date, timedelta
@@ -39,6 +40,7 @@ db = SQLAlchemy(app)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    full_name = db.Column(db.String(120), nullable=True)
     password_hash = db.Column(db.String(128), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     tasks = db.relationship('Task', backref='user', lazy=True)
@@ -81,6 +83,12 @@ class TaskDependency(db.Model):
 # Initialize database
 with app.app_context():
     db.create_all()
+    # Safely add full_name column to existing deployments
+    try:
+        db.session.execute(text('ALTER TABLE "user" ADD COLUMN full_name VARCHAR(120)'))
+        db.session.commit()
+    except Exception:
+        db.session.rollback() # Column likely already exists
 
 # Auth Routes
 @app.route('/api/auth/register', methods=['POST'])
@@ -111,7 +119,7 @@ def login():
     user = User.query.filter_by(email=email).first()
     if user and bcrypt.check_password_hash(user.password_hash, password):
         access_token = create_access_token(identity=str(user.id))
-        return jsonify(access_token=access_token, user={"id": user.id, "email": user.email}), 200
+        return jsonify(access_token=access_token, user={"id": user.id, "email": user.email, "full_name": user.full_name}), 200
     
     return jsonify({"msg": "Invalid credentials"}), 401
 
@@ -120,7 +128,58 @@ def login():
 def get_current_user():
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
-    return jsonify({"id": user.id, "email": user.email}), 200
+    return jsonify({"id": user.id, "email": user.email, "full_name": user.full_name}), 200
+
+@app.route('/api/auth/profile', methods=['PUT'])
+@jwt_required()
+def update_profile():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    data = request.json
+    
+    if 'full_name' in data:
+        user.full_name = data['full_name']
+        
+    db.session.commit()
+    return jsonify({"msg": "Profile updated", "user": {"id": user.id, "email": user.email, "full_name": user.full_name}}), 200
+
+@app.route('/api/auth/password', methods=['PUT'])
+@jwt_required()
+def update_password():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    data = request.json
+    
+    current_password = data.get('current_password')
+    new_password = data.get('new_password')
+    
+    if not current_password or not new_password:
+        return jsonify({"msg": "Current password and new password are required"}), 400
+        
+    if not bcrypt.check_password_hash(user.password_hash, current_password):
+        return jsonify({"msg": "Incorrect current password"}), 401
+        
+    user.password_hash = bcrypt.generate_password_hash(new_password).decode('utf-8')
+    db.session.commit()
+    return jsonify({"msg": "Password updated successfully"}), 200
+
+@app.route('/api/auth/account', methods=['DELETE'])
+@jwt_required()
+def delete_account():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    
+    # Due to cascading in SQLAlchemy relations (or manual loop depending on setup),
+    # tasks should delete. But wait, tasks relationship is just lazy=True. 
+    # Let's drop tasks explicitly first.
+    tasks = Task.query.filter_by(user_id=current_user_id).all()
+    for task in tasks:
+        # Checklists are cascade deleted via relationship in Task model, same for dependencies
+        db.session.delete(task)
+        
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({"msg": "Account deleted successfully"}), 200
 
 # API Routes
 
