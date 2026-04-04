@@ -10,7 +10,7 @@ function LandingPage() {
     return (
         <div className="landing-container">
             <header className="landing-header">
-                <div className="logo">TaskFlow Planner</div>
+                <div className="logo">TaskFlow</div>
                 <nav className="nav-links">
                     {isAuthenticated && (
                         <Link to="/dashboard" className="nav-btn primary">Dashboard</Link>

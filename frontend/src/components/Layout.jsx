@@ -22,7 +22,7 @@ const Layout = ({ children }) => {
     <div className="layout">
       <nav className="navbar">
         <div className="nav-brand">
-          <h1>WorkTask Planner</h1>
+          <h1>TaskFlow</h1>
         </div>
         
         <div className="nav-links">
