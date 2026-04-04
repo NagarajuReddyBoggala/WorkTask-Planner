@@ -29,7 +29,7 @@ function LandingPage() {
                             <Link to="/dashboard" className="cta-btn primary">Launch Dashboard</Link>
                         ) : (
                             <>
-                                <Link to="/register" className="cta-btn primary">Get Started</Link>
+                                <Link to="/login" className="cta-btn primary">Get Started</Link>
                             </>
                         )}
                     </div>
