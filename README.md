@@ -31,7 +31,7 @@
 
 **TaskFlow** is a production-ready task management application designed for individual developers and professionals who want to organize their work with clarity. Unlike generic to-do apps, TaskFlow is purpose-built around developer workflows — with features like **Jira ticket linking**, **Git branch tracking**, **multi-stage checklists**, and **task dependency mapping**.
 
-> **🔗 Live Demo:** _Coming soon — URL will be updated after rename_
+> **🔗 Live Demo:** [trytaskflow.vercel.app](https://trytaskflow.vercel.app)
 
 ---
 
