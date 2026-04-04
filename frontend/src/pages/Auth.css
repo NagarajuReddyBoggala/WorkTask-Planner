@@ -61,12 +61,12 @@
     font-weight: 500;
 }
 
-.form-group {
+.auth-container .form-group {
     margin-bottom: 1.5rem;
     text-align: left;
 }
 
-.form-group label {
+.auth-container .form-group label {
     display: block;
     margin-bottom: 0.5rem;
     color: #d1d5db;
@@ -76,20 +76,20 @@
     letter-spacing: 0.05em;
 }
 
-.input-icon-wrapper {
+.auth-container .input-icon-wrapper {
     position: relative;
     display: flex;
     align-items: center;
 }
 
-.input-icon {
+.auth-container .input-icon {
     position: absolute;
     left: 1rem;
     color: #6b7280;
     transition: color 0.3s;
 }
 
-.form-group input {
+.auth-container .form-group input {
     width: 100%;
     padding: 1rem 1rem 1rem 3rem;
     background: rgba(255, 255, 255, 0.03);
@@ -100,23 +100,23 @@
     transition: all 0.3s ease;
 }
 
-.form-group input::placeholder {
+.auth-container .form-group input::placeholder {
     color: #6b7280;
 }
 
-.form-group input:focus {
+.auth-container .form-group input:focus {
     outline: none;
     background: rgba(255, 255, 255, 0.05);
     border-color: #818cf8;
     box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2);
 }
 
-.form-group input:focus + .input-icon,
-.form-group input:focus ~ .input-icon {
+.auth-container .form-group input:focus + .input-icon,
+.auth-container .form-group input:focus ~ .input-icon {
     color: #818cf8;
 }
 
-.password-toggle {
+.auth-container .password-toggle {
     position: absolute;
     right: 1rem;
     background: none;
@@ -130,11 +130,11 @@
     transition: color 0.3s;
 }
 
-.password-toggle:hover {
+.auth-container .password-toggle:hover {
     color: #a5b4fc;
 }
 
-.form-group input.has-toggle {
+.auth-container .form-group input.has-toggle {
     padding-right: 2.75rem;
 }
 
