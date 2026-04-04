@@ -63,5 +63,20 @@ export const jiraService = {
   }
 }
 
+export const authService = {
+  getProfile: () => {
+    return api.get('/auth/me')
+  },
+  updateProfile: (data) => {
+    return api.put('/auth/profile', data)
+  },
+  updatePassword: (data) => {
+    return api.put('/auth/password', data)
+  },
+  deleteAccount: () => {
+    return api.delete('/auth/account')
+  }
+}
+
 export default api
 

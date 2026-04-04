@@ -10,6 +10,7 @@ import TaskDetail from './pages/TaskDetail'
 import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
+import ProfilePage from './pages/ProfilePage'
 import './App.css'
 
 function App() {
@@ -49,6 +50,13 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <TaskDetail />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Layout>
+                  <ProfilePage />
                 </Layout>
               </ProtectedRoute>
             } />

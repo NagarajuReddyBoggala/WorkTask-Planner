@@ -58,10 +58,12 @@ const Layout = ({ children }) => {
             {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
           </button>
           <div className="nav-divider" style={{ width: '1px', height: '24px', background: 'var(--border-color)', margin: '0 8px' }}></div>
-          <div className="user-profile" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px', borderRadius: '20px', backgroundColor: 'var(--bg-tertiary)', color: 'var(--text-primary)', fontSize: '0.9rem', fontWeight: 500 }}>
-            <UserIcon size={16} />
-            <span>{user?.email || "User"}</span>
-          </div>
+          <Link to="/profile" style={{ textDecoration: 'none' }}>
+            <div className={`user-profile ${location.pathname === '/profile' ? 'active' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px', borderRadius: '20px', backgroundColor: location.pathname === '/profile' ? 'var(--primary-color)' : 'var(--bg-tertiary)', color: location.pathname === '/profile' ? 'white' : 'var(--text-primary)', fontSize: '0.9rem', fontWeight: 500, transition: 'all 0.2s', cursor: 'pointer' }}>
+              <UserIcon size={16} />
+              <span>{user?.full_name || user?.email?.split('@')[0] || "User"}</span>
+            </div>
+          </Link>
           <button
             className="icon-button"
             onClick={logout}
