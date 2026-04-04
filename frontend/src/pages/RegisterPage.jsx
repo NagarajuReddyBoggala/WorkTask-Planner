@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { Mail, Lock, CheckCircle2, ArrowLeft } from 'lucide-react'
+import { Mail, Lock, CheckCircle2, ArrowLeft, Eye, EyeOff } from 'lucide-react'
 import './Auth.css'
 
 function RegisterPage() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [error, setError] = useState('')
     const { register } = useAuth()
     const navigate = useNavigate()
@@ -59,13 +61,22 @@ function RegisterPage() {
                         <label>Password</label>
                         <div className="input-icon-wrapper">
                             <input
-                                type="password"
+                                type={showPassword ? "text" : "password"}
                                 placeholder="••••••••"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
+                                className="has-toggle"
                             />
                             <Lock size={18} className="input-icon" />
+                            <button 
+                                type="button" 
+                                className="password-toggle"
+                                onClick={() => setShowPassword(!showPassword)}
+                                aria-label={showPassword ? "Hide password" : "Show password"}
+                            >
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
                         </div>
                     </div>
 
@@ -73,13 +84,22 @@ function RegisterPage() {
                         <label>Confirm Password</label>
                         <div className="input-icon-wrapper">
                             <input
-                                type="password"
+                                type={showConfirmPassword ? "text" : "password"}
                                 placeholder="••••••••"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 required
+                                className="has-toggle"
                             />
                             <CheckCircle2 size={18} className="input-icon" />
+                            <button 
+                                type="button" 
+                                className="password-toggle"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                            >
+                                {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
                         </div>
                     </div>
 
