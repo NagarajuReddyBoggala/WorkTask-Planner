@@ -116,6 +116,28 @@
     color: #818cf8;
 }
 
+.password-toggle {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.25rem;
+    transition: color 0.3s;
+}
+
+.password-toggle:hover {
+    color: #a5b4fc;
+}
+
+.form-group input.has-toggle {
+    padding-right: 2.75rem;
+}
+
 .auth-button {
     width: 100%;
     padding: 1.1rem;
