@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/screenshots/landing.png" alt="TaskFlow Banner" width="100%" />
+  <img src="docs/screenshots/landing_new.png" alt="TaskFlow Banner" width="100%" />
 </p>
 
 <h1 align="center">⚡ TaskFlow</h1>
@@ -29,7 +29,9 @@
 
 ## 🎯 What is TaskFlow?
 
-**TaskFlow** is a production-ready task management application designed for individual developers and professionals who want to organize their work with clarity. Unlike generic to-do apps, TaskFlow is purpose-built around developer workflows — with features like **Jira ticket linking**, **Git branch tracking**, **multi-stage checklists**, and **task dependency mapping**.
+**TaskFlow** is a premium, full-stack task management platform designed for developers and professionals who demand **absolute clarity** in their workspace. Built with a high-end "Void Blue" aesthetic, it combines the powerful organization features of enterprise tools like Jira with the friction-less speed of a modern React SPA.
+
+Track your momentum with **interactive dashboards**, visualize your sprint on the **calendar**, and manage your workflow with a buttery-smooth **drag-and-drop Kanban board**.
 
 > **🔗 Live Demo:** [trytaskflow.vercel.app](https://trytaskflow.vercel.app)
 
@@ -37,11 +39,11 @@
 
 ## ✨ Features
 
-### 🔐 Authentication & Security
+### 🔐 Authentication & Profile
 - JWT-based authentication with secure token management
-- Password hashing with Bcrypt
-- Protected routes with automatic session restoration
-- Per-user data isolation — your tasks are 100% private
+- **Personalized Profile**: Update name, email, and security settings
+- **Password Management**: Secure hashing with Bcrypt and "Show Password" toggles
+- **Privacy First**: Secure account deletion with cascading data removal
 
 ### 📋 Task Management
 - Full **CRUD operations** — create, read, update, delete tasks
@@ -56,16 +58,16 @@
 - Visual progress tracking per task
 - Drag-and-drop reordering
 
-### 🔗 Task Dependencies
-- Link related tasks together
-- Visualize which tasks block others
-- Dependency status tracking (see if blocking tasks are completed)
+### 📋 Kanban Board & Workflows
+- **Drag-and-Drop Kanban**: Buttery-smooth status management using `@hello-pangea/dnd`
+- **4-Column View**: To Do, In Progress, Completed, and Blocked stages
+- **Optimistic Updates**: Zero-latency UI — cards snap to columns while the DB updates silently
+- **Visual Hierarchy**: Priorities and types instantly identifiable at a glance
 
 ### 📊 Dashboard Analytics
-- At-a-glance stats: total, in-progress, completed, overdue tasks
-- Checklist completion rate with progress bars
-- Task completion percentage
-- Quick access to active tasks
+- **Clickable Stats**: Tap on Total, In Progress, or Overdue cards to instantly filter your task feed
+- **Dynamic Indicators**: Real-time checklist completion rates and progress tracking
+- **Overdue Detection**: Advanced timezone-aware logic for tracking missed deadlines
 
 ### 📅 Calendar View
 - Interactive monthly/weekly calendar powered by FullCalendar.js
@@ -93,9 +95,21 @@
 ## 📸 Screenshots
 
 <details>
-<summary><strong>🏠 Landing Page</strong> — Click to expand</summary>
+<summary><strong>🏠 Landing Page</strong> — Master Your Work with Absolute Clarity</summary>
 <br />
-<img src="docs/screenshots/landing.png" alt="Landing Page" width="100%" />
+<img src="docs/screenshots/landing_new.png" alt="Landing Page" width="100%" />
+</details>
+
+<details>
+<summary><strong>📋 Kanban Board</strong> — Frictionless status management</summary>
+<br />
+<img src="docs/screenshots/kanban.png" alt="Kanban Board" width="100%" />
+</details>
+
+<details>
+<summary><strong>📊 Interactive Dashboard</strong> — Data-driven focus</summary>
+<br />
+<img src="docs/screenshots/dashboard_new.png" alt="Dashboard" width="100%" />
 </details>
 
 <details>
@@ -264,8 +278,9 @@ All endpoints (except auth) require a valid JWT token in the `Authorization: Bea
 TaskFlow/
 ├── backend/
 │   ├── app.py                 # Flask app, models, and all API routes
-│   ├── requirements.txt       # Python dependencies
-│   └── vercel.json            # Vercel serverless config
+│   └── requirements.txt       # Python dependencies
+│
+├── vercel.json                # Root deployment & cache optimization config
 │
 ├── frontend/
 │   ├── src/
@@ -278,6 +293,8 @@ TaskFlow/
 │   │   │   ├── TaskList.jsx   # Task list with search & filters
 │   │   │   ├── TaskDetail.jsx # Task detail with checklist & deps
 │   │   │   ├── CalendarView.jsx # FullCalendar integration
+│   │   │   ├── KanbanBoard.jsx  # Drag-and-drop board
+│   │   │   ├── ProfilePage.jsx  # User account & security portal
 │   │   │   ├── LandingPage.jsx  # Public landing page
 │   │   │   ├── LoginPage.jsx    # Authentication - login
 │   │   │   └── RegisterPage.jsx # Authentication - register
@@ -312,13 +329,13 @@ TaskFlow/
 
 ## 🗺️ Roadmap
 
-- [ ] Drag & Drop Kanban Board
+- [x] Drag & Drop Kanban Board
 - [ ] Task Analytics with Charts (Recharts)
 - [ ] Database Migrations with Alembic
 - [ ] Export to CSV/JSON
-- [ ] Profile Page & User Settings
+- [x] Profile Page & User Settings
 - [ ] Toast Notification System
-- [ ] Unit & Integration Tests
+- [ ] Unit & Integration Tests (Vitest)
 - [ ] CI/CD Pipeline with GitHub Actions
 
 ---
