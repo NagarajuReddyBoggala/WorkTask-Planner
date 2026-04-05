@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useTheme } from '../contexts/ThemeContext'
 import { useAuth } from '../contexts/AuthContext'
-import { Moon, Sun, Home, Calendar, List, Plus, Search, LogOut, User as UserIcon } from 'lucide-react'
+import { Moon, Sun, Home, Calendar, List, Plus, Search, LogOut, User as UserIcon, Trello } from 'lucide-react'
 import './Layout.css'
 
 const Layout = ({ children }) => {
@@ -15,6 +15,7 @@ const Layout = ({ children }) => {
   const navItems = [
     { path: '/dashboard', icon: Home, label: 'Dashboard' },
     { path: '/calendar', icon: Calendar, label: 'Calendar' },
+    { path: '/board', icon: Trello, label: 'Board' },
     { path: '/tasks', icon: List, label: 'Tasks' }
   ]
 

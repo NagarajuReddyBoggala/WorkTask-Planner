@@ -95,6 +95,7 @@ const Dashboard = () => {
     },
     {
       id: 'overdue',
+      label: 'Overdue',
       value: stats?.overdue_tasks || 0,
       icon: AlertCircle,
       color: 'var(--danger)'

@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext'
 import Layout from './components/Layout'
 import Dashboard from './pages/Dashboard'
 import CalendarView from './pages/CalendarView'
+import KanbanBoard from './pages/KanbanBoard'
 import TaskList from './pages/TaskList'
 import TaskDetail from './pages/TaskDetail'
 import LandingPage from './pages/LandingPage'
@@ -36,6 +37,13 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <CalendarView />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/board" element={
+              <ProtectedRoute>
+                <Layout>
+                  <KanbanBoard />
                 </Layout>
               </ProtectedRoute>
             } />

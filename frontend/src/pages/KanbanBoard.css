@@ -1,0 +1,104 @@
+.board-view {
+  animation: fadeIn 0.5s ease-out;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.board-header {
+  margin-bottom: 2rem;
+}
+
+.board-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.board-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 1.5rem;
+  flex: 1;
+  overflow-x: auto;
+  align-items: flex-start;
+  min-height: 60vh;
+  padding-bottom: 1rem;
+}
+
+.board-column {
+  min-width: 0; 
+  flex: 1; /* Let them all stretch and squeeze evenly across the screen */
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 500px;
+}
+
+.board-column.is-dragging-over {
+  background-color: var(--bg-tertiary);
+  border-color: var(--accent-primary);
+}
+
+.column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid;
+}
+
+.column-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.column-count {
+  background-color: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: 600;
+}
+
+/* Specific Column Header Colors */
+.col-todo { border-bottom-color: var(--status-todo); }
+.col-in_progress { border-bottom-color: var(--status-in-progress); }
+.col-blocked { border-bottom-color: var(--status-blocked); }
+.col-done { border-bottom-color: var(--status-done); }
+
+.column-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.draggable-task {
+  user-select: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  /* Ensure TaskCard takes full width and drops standard margins */
+}
+
+.draggable-task.is-dragging {
+  transform: rotate(2deg) scale(1.02);
+  box-shadow: var(--shadow-xl);
+  opacity: 0.9;
+}
+
+.draggable-task .task-card {
+  margin-bottom: 0;
+}
