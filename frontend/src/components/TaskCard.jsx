@@ -4,7 +4,7 @@ import { format } from 'date-fns'
 import { Calendar, AlertCircle, CheckCircle2, Clock, XCircle } from 'lucide-react'
 import './TaskCard.css'
 
-const TaskCard = ({ task, onUpdate }) => {
+const TaskCard = ({ task, onUpdate, disableLink = false }) => {
   const getPriorityColor = (priority) => {
     switch (priority) {
       case 'urgent': return 'var(--priority-urgent)'
@@ -39,8 +39,11 @@ const TaskCard = ({ task, onUpdate }) => {
     ? (task.completed_checklist_count / task.checklist_count) * 100 
     : 0
 
+  const Wrapper = disableLink ? 'div' : Link
+  const wrapperProps = disableLink ? { className: "task-card" } : { to: `/tasks/${task.id}`, className: "task-card" }
+
   return (
-    <Link to={`/tasks/${task.id}`} className="task-card">
+    <Wrapper {...wrapperProps}>
       <div className="task-card-header">
         <h3 className="task-title">{task.title}</h3>
         <div className="task-badges">
@@ -94,7 +97,7 @@ const TaskCard = ({ task, onUpdate }) => {
           <span className="jira-badge">Jira: {task.jira_id}</span>
         </div>
       )}
-    </Link>
+    </Wrapper>
   )
 }
 
