@@ -131,9 +131,15 @@ Track your momentum with **interactive dashboards**, visualize your sprint on th
 </details>
 
 <details>
-<summary><strong>📅 Calendar View</strong> — Click to expand</summary>
+<summary><strong>📅 Calendar View</strong> — Visualize your deadlines</summary>
 <br />
 <img src="docs/screenshots/calendar.png" alt="Calendar" width="100%" />
+</details>
+
+<details>
+<summary><strong>👤 Profile & Security</strong> — Manage your identity</summary>
+<br />
+<img src="docs/screenshots/profile.png" alt="Profile" width="100%" />
 </details>
 
 ---
