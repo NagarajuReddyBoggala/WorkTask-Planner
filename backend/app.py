@@ -30,7 +30,7 @@ if database_url:
         database_url = database_url.replace("postgres://", "postgresql://", 1)
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(basedir, "worktask.db")}'
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(basedir, "taskflow.db")}'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

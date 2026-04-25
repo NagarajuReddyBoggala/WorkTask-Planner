@@ -187,8 +187,8 @@ Track your momentum with **interactive dashboards**, visualize your sprint on th
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/NagarajuReddyBoggala/WorkTask-Planner.git
-cd WorkTask-Planner
+git clone https://github.com/NagarajuReddyBoggala/TaskFlow.git
+cd TaskFlow
 ```
 
 ### 2. Backend Setup
